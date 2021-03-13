@@ -4,31 +4,31 @@ variable "server_port" {
   type        = number
 }
 
-output "public_id" {
-  description = "The public IP address"
-  value       = aws_instance.example_instance.public_ip
-}
-
 provider "aws" {
   region = "ap-southeast-1" //  To deploy the infra structure into the ap-sout.. regoin
 }
 
-resource "aws_instance" "example_instance" {
-  ami           = "ami-01581ffba3821cdf3"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "terraform-example"
-  }
-  vpc_security_group_ids = [aws_security_group.instance.id]
-  // init directive
-  user_data = <<-EOT
-              #!/bin/bash
-              echo "Hello, World" > index.html
-              nohup busybox httpd -f -p 8080 &
-              EOT
-}
-
+//resource "aws_instance" "example_instance" {
+//  ami           = "ami-01581ffba3821cdf3"
+//  instance_type = "t2.micro"
+//
+//  tags = {
+//    Name = "terraform-example"
+//  }
+//  vpc_security_groupo,._ids = [aws_security_group.instance.id]
+//  // init directive
+//  user_data = <<-EOT
+//              #!/bin/bash
+//              echo "Hello, World" > index.html
+//              nohup busybox httpd -f -p 8080 &
+//              EOT
+//}
+//
+//output "public_id" {
+//  description = "The public IP address"
+//  value       = aws_instance.example_instance.public_ip
+//}
+//
 
 // security group
 resource "aws_security_group" "instance" {
@@ -142,7 +142,7 @@ resource "aws_alb_target_group" "asg" {
 }
 
 resource "aws_lb_listener_rule" "asg" {
-  listener_arn = ""
+  listener_arn = aws_alb_listener.http_alb_listener.arn
 
   condition {
     path_pattern {
