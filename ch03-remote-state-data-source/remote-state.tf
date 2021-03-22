@@ -1,13 +1,9 @@
-provider "aws" {
-  region = "ap-southeast-1"
-}
-
 resource "aws_s3_bucket" "s3_bucket_terraform_state" {
 
-  bucket = "terraform-up-and-running-state-outdam-demo"
+  bucket = "terraform-up-and-running-state-outdam-demo-remote-state"
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 
   versioning {
@@ -22,8 +18,9 @@ resource "aws_s3_bucket" "s3_bucket_terraform_state" {
     }
   }
 }
+
 resource "aws_dynamodb_table" "dynamodb_terraform_state_locks" {
-  name = "terraform-up-and-running-demo-locks"
+  name = "terraform-up-and-running-demo-remote-state-locks"
   hash_key = "LockID"
   billing_mode = "PAY_PER_REQUEST"
   attribute {
