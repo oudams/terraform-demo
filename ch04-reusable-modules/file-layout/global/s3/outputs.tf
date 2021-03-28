@@ -1,5 +1,5 @@
 output "stage_s3_bucket" {
-  value       = aws_s3_bucket.terraform_state.bucket
+  value       = aws_s3_bucket.stage_terraform_state.bucket
   description = "the arn of the s3 bucket"
 }
 
