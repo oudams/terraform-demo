@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-remote-state-demo-outdam"
-    key            = "stage/data-stores/mysql/terraform.tfstate"
+    bucket         = var.state_bucket_name
+    key            = var.state_bucket_key
     region         = "ap-southeast-1"
-    dynamodb_table = "terraform-remote-state-lock-demo-outdam"
+    dynamodb_table = var.locks_table
     encrypt        = true
   }
 }
