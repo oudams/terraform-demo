@@ -22,3 +22,7 @@ variable "state_bucket_name" {
 variable "locks_table" {
   default = "prod-terraform-remote-state-lock-demo-outdam"
 }
+
+variable "identifier_prefix" {
+  default = "terraform-and-running"
+}

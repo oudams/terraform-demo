@@ -20,5 +20,5 @@ resource "aws_db_instance" "example" {
   skip_final_snapshot = true
   allocated_storage = 10
   engine = "mysql"
-  identifier_prefix = "terraform-up-and-running-demo"
+  identifier_prefix = var.identifier_prefix
 }
