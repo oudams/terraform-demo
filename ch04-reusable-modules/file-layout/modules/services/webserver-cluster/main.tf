@@ -10,7 +10,8 @@ resource "aws_launch_configuration" "example" {
 }
 
 resource "aws_security_group" "instance" {
-  name = var.instance_security_group_name
+  name = "${var.cluster_name}-instance"
+//  name = var.instance_security_group_name
 
   ingress {
     from_port = var.server_port
@@ -28,7 +29,8 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group" "alb" {
-  name = var.alb_security_group_name
+  name = "${var.cluster_name}-alb"
+//  name = var.alb_security_group_name
 
   # Allow inbound HTTP requests
   ingress {
@@ -129,6 +131,8 @@ data "template_file" "user_data" {
     server_port = var.server_port
     db_address = data.terraform_remote_state.db.outputs.address
     db_port = data.terraform_remote_state.db.outputs.port
+    //    db_address = data.terraform_remote_state.db.outputs.address
+    //    db_port = data.terraform_remote_state.db.outputs.port
   }
 }
 
