@@ -4,10 +4,10 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = var.state_bucket_name
-    key            = var.state_bucket_key
+    bucket         = "prod-terraform-remote-state-demo-outdam"
+    key            = "prod/data-stores/mysql/terraform.tfstate"
     region         = "ap-southeast-1"
-    dynamodb_table = var.locks_table
+    dynamodb_table = "prod-terraform-remote-state-lock-demo-outdam"
     encrypt        = true
   }
 }
