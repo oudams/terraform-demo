@@ -1,6 +1,6 @@
 resource "aws_launch_configuration" "example" {
   image_id        = "ami-01581ffba3821cdf3"
-  instance_type   = "t2.micro"
+  instance_type   = var.instance_type
   security_groups = [aws_security_group.instance.id]
   lifecycle {
     create_before_destroy = true
@@ -28,24 +28,32 @@ resource "aws_security_group" "instance" {
   }
 }
 
+locals {
+  lb_from_http_port = 80
+  lb_to_http_port = 80
+  lb_tcp_protocol= "tcp"
+  cidr_all_ips = ["0.0.0.0/0"]
+  lb_any_protocol = "-1"
+  lb_any_port = 0
+}
+
 resource "aws_security_group" "alb" {
   name = "${var.cluster_name}-alb"
-//  name = var.alb_security_group_name
 
   # Allow inbound HTTP requests
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = local.lb_from_http_port
+    to_port     = local.lb_to_http_port
+    protocol    = local.lb_tcp_protocol
+    cidr_blocks = local.cidr_all_ips
   }
 
   # Allow all outbound requests
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = local.lb_any_port
+    to_port     = local.lb_any_port
+    protocol    = local.lb_any_protocol
+    cidr_blocks = local.cidr_all_ips
   }
 }
 
@@ -54,8 +62,8 @@ resource "aws_autoscaling_group" "example" {
   vpc_zone_identifier = data.aws_subnet_ids.default.ids
   target_group_arns = [aws_lb_target_group.asg.arn]
 
-  max_size = 10
-  min_size = 1
+  max_size = var.max_scale
+  min_size = var.min_scale
 
   health_check_type = "ELB"
 
@@ -92,7 +100,7 @@ resource "aws_lb_target_group" "asg" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example.arn
-  port              = 80
+  port              = local.lb_from_http_port
   protocol          = "HTTP"
 
   # By default, return a simple 404 page
@@ -125,14 +133,13 @@ resource "aws_lb_listener_rule" "asg" {
 
 # Data declaration
 data "template_file" "user_data" {
-  template = file("user-data.sh")
+  template = file("${path.module}/user-data.sh")
 
   vars = {
     server_port = var.server_port
     db_address = data.terraform_remote_state.db.outputs.address
     db_port = data.terraform_remote_state.db.outputs.port
-    //    db_address = data.terraform_remote_state.db.outputs.address
-    //    db_port = data.terraform_remote_state.db.outputs.port
+    cluster_name = var.cluster_name
   }
 }
 

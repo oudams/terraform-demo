@@ -1,7 +1,9 @@
 #!/bin/bash
 
 cat > index.html <<EOF
-<h1>Hello, Outdam</h1>
+<p>
+<h1>This is Cluster: ${cluster_name}</h1>
+</>
 <p>DB address: ${db_address}</p>
 <p>DB port: ${db_port}</p>
 EOF

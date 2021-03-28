@@ -57,3 +57,17 @@ variable "db_remote_state_key" {
   //  default = "stage/data-stores/mysql/terraform.tfstate"
 }
 
+variable "instance_type" {
+  description = "An EC2 instance type"
+  type = string
+}
+
+variable "max_scale" {
+  description = "The maximum number of EC2 Instances in the ASG"
+  type = number
+}
+
+variable "min_scale" {
+  description = "The minimum number of EC2 Instances in the ASG"
+  type = number
+}
