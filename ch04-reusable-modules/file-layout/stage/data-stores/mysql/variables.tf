@@ -9,20 +9,6 @@ variable "db_name" {
   default = "stage_example_mysql_database"
 }
 
-variable "state_bucket_key" {
-  default = "stage/data-stores/mysql/terraform.tfstate"
-}
-
-// Values are defined in global/
-variable "state_bucket_name" {
-  default = "stage-terraform-remote-state-demo-outdam"
-}
-
-// Values are defined in global/
-variable "locks_table" {
-  default = "prod-terraform-remote-state-lock-demo-outdam"
-}
-
 variable "identifier_prefix" {
   default = "terraform-and-running"
 }

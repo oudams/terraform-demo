@@ -1,15 +1,15 @@
-terraform {
-  backend "s3" {
-    bucket         = var.state_bucket_name
-    key            = var.state_bucket_key
-    region         = "ap-southeast-1"
-    dynamodb_table = var.locks_table
-    encrypt        = true
-  }
+provider "aws" {
+  region         = "ap-southeast-1"
 }
 
-provider "aws" {
-  region = "ap-southeast-1"
+terraform {
+  backend "s3" {
+    bucket         = "stage-terraform-remote-state-demo-outdam"
+    key            = "stage/data-stores/mysql/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "stage-terraform-remote-state-lock-demo-outdam"
+    encrypt        = true
+  }
 }
 
 resource "aws_db_instance" "example" {
